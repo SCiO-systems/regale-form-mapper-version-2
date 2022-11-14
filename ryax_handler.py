@@ -14,6 +14,7 @@ from datar.all import f
 from itertools import compress
 import math
 import datar
+import os
 
 #import from other files
 from LITAP_functions import *
@@ -24,7 +25,6 @@ from form_01_calc_form import *
 from form_02_calc_weti import *
 from form_03_calc_relz import *
 from form_04_calc_length import *
-
 
 
 def handle(module_input):
@@ -41,18 +41,21 @@ def handle(module_input):
 
 
     output_backup_folder = TMP_DIR + "/python_outputs/backup/"
-    output_stats_folder = TMP_DIR + "/python_outputs/flow/"
+    output_stats_folder = TMP_DIR + "/python_outputs/form/"
 
-    out_directory = TMP_DIR + "/python_outputs"
+    folder = TMP_DIR + "/python_outputs/"
 
-    file = module_input["file"]     #"../../landmapr/LITAP/inst/extdata/testELEV.dbf"
-    grid = module_input["grid"]
-    str_val = module_input["str_val"]
-    ridge_val = module_input["ridge_val"]
-    verbose = module_input["verbose"]
+    with open(module_input["input_json"], 'r') as f:
+      module_input = json.load(f)   
+
+    # file = module_input["file"]     #"../../landmapr/LITAP/inst/extdata/testELEV.dbf"
+    grid = module_input["hyperparameters"]["grid"]
+    str_val = module_input["hyperparameters"]["str_val"]
+    ridge_val = module_input["hyperparameters"]["ridge_val"]
+    verbose = module_input["hyperparameters"]["verbose"]
     resume = None
 
-
+    
     if (resume==None): resume=""
 
     # # in order to be compatible with ryax platform, inputs with value -1 are translated to None value
@@ -88,7 +91,7 @@ def handle(module_input):
 
 
     os.system("mkdir " + folder + "form/")
-    #%% # Form 
+    # Form 
     if (resume=="" or resume=="form"):
         db_form = calc_form(db, grid,verbose=verbose)
         
@@ -97,7 +100,7 @@ def handle(module_input):
 
     #--------------------------------------------------------------------------------------------
 
-    #%% # Wetness indices 
+    # Wetness indices 
     if (resume=="" or resume=="weti"):
         db_weti = calc_weti(db, grid, verbose = verbose)
 
@@ -118,7 +121,7 @@ def handle(module_input):
 
     #--------------------------------------------------------------------------------------------
 
-    #%% # Relief
+    # Relief
     if (resume=="" or resume=="relief"):
         db_relz = calc_relz(db, idb, str_val = str_val, ridge_val = ridge_val, pond = pond, verbose = verbose)
         
@@ -128,7 +131,7 @@ def handle(module_input):
 
     #--------------------------------------------------------------------------------------------
 
-    #%% # Length 
+    # Length 
     if (resume=="" or resume=="length"):
         db_length = calc_length(db, db_relz, verbose = verbose)
 
@@ -139,5 +142,5 @@ def handle(module_input):
          
     successful = 200
     
-    return {'python_outputs' : out_directory}
-    
+    return {'python_outputs' : folder}
+

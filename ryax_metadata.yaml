@@ -14,22 +14,10 @@ spec:
     - pythonPackages.numpy
     - pythonPackages.datar
   inputs:
-  - help: grid size
-    human_name: Size of grid
-    name: grid
-    type: integer
-  - help: str value (refer to R for more info)
-    human_name: str value
-    name: str_val
-    type: integer
-  - help: ridge value (refer to R for more info)
-    human_name: ridge value
-    name: ridge_val
-    type: integer
-  - help: Directory with outputs
-    human_name: Result directory
-    name: python_outputs
-    type: directory
+- help: hyperparameters json file
+    human_name: hyperparameters json file
+    name: input_jsons
+    type: file
   outputs:
   - help: Directory with outputs
     human_name: Result directory

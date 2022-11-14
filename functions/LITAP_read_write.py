@@ -9,6 +9,7 @@ from datar.all import f
 from itertools import compress
 import math
 import datar
+import os
 
 #import from other files
 from LITAP_utils import *
