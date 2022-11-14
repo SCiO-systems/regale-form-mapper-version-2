@@ -34,8 +34,16 @@ def handle(module_input):
     arg3 = "ridge_val" 
     arg4 = "output folder"
 
-    output_backup_folder = "../python_outputs/backup/"
-    output_stats_folder = "../python_outputs/flow/"
+    # output_backup_folder = "../python_outputs/backup/"
+    # output_stats_folder = "../python_outputs/flow/"
+
+    TMP_DIR = "/tmp"
+
+
+    output_backup_folder = TMP_DIR + "/python_outputs/backup/"
+    output_stats_folder = TMP_DIR + "/python_outputs/flow/"
+
+    out_directory = TMP_DIR + "/python_outputs"
 
     file = module_input["file"]     #"../../landmapr/LITAP/inst/extdata/testELEV.dbf"
     grid = module_input["grid"]
