@@ -1,4 +1,4 @@
-{ pkgs, python, python3Packages }:
+{ lib, pkgs, python, python3Packages }:
 
 let
   self = rec {

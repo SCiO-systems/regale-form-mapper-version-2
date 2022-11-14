@@ -1,8 +1,8 @@
 apiVersion: "ryax.tech/v2.0"
 kind: Processor
 spec:
-  id: flow-mapper
-  human_name: Flow Mapper Component
+  id: form-mapper
+  human_name: Form Mapper Component
   type: python3
   version: "3.0"
   logo: "logo.png"
