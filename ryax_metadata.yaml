@@ -14,42 +14,22 @@ spec:
     - pythonPackages.numpy
     - pythonPackages.datar
   inputs:
-  - help: DEM file
-    human_name: Elevation map
-    name: file
-    type: file
-  - help: rows number
-    human_name: Number of rows of file
-    name: nrow
+  - help: grid size
+    human_name: Size of grid
+    name: grid
     type: integer
-  - help: cols number
-    human_name: Number of columns of file
-    name: ncol
+  - help: str value (refer to R for more info)
+    human_name: str value
+    name: str_val
     type: integer
-  - help: missing data value
-    human_name: Value used for missing data
-    name: missing_value
+  - help: ridge value (refer to R for more info)
+    human_name: ridge value
+    name: ridge_val
     type: integer
-  - help: pit maximum area
-    human_name: Maximum area of pit
-    name: max_area
-    type: integer
-  - help: max depth
-    human_name: Maximum depth of pit
-    name: max_depth
-    type: float
-  - help: Print messages
-    human_name: Verbose
-    name: verbose
-    type: integer
-  - help: rows limits
-    human_name: Limits of rows to process
-    name: rlim
-    type: integer
-  - help: cols limits
-    human_name: Limits of columns to process
-    name: clim
-    type: integer
+  - help: Directory with outputs
+    human_name: Result directory
+    name: python_outputs
+    type: directory
   outputs:
   - help: Directory with outputs
     human_name: Result directory
