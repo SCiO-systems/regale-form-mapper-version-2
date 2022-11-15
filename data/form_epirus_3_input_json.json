@@ -1,0 +1,10 @@
+{
+"hyperparameters" : 
+	{	
+	"grid" : 5,
+	"str_val" : 10000,
+	"ridge_val" : 10000,
+	"output_folder" : "/home/christos/Desktop/SCiO_Projects/REGALE/regale/epirus_test_3_outputs/",
+	"verbose": true
+	}
+}
