@@ -48,7 +48,7 @@ def save_output(locs, out_format="csv", which=["fill","local", "pond", "pit", "i
             stat_names = ["fill","ilocal","initial","local","pit","pond"]
             if name in stat_names:
                 #check if dataframe is empty
-                stats_data = pd.read_csv(locs + "/stats_" + file_name)
+                stats_data = pd.read_csv(locs + "stats_" + file_name)
                 if len(stats_data>0):
                     s = remove_buffer(data,stats_data)
                     save_shed(locs.replace("backup",where),s,"stats_" + file_name)
