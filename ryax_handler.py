@@ -43,10 +43,10 @@ def handle(module_input):
     with open(module_input["input_json"], "r") as file:
       data = json.load(file)
 
-    TMP_DIR = "/tmp/"
-    # TMP_DIR = "/home/christos/Desktop/SCiO_Projects/REGALE/regale-ryax-modules/"
+    # TMP_DIR = "/tmp/"
+    TMP_DIR = "/home/christos/Desktop/SCiO_Projects/REGALE/regale-ryax-modules/"
 
-    out_directory = TMP_DIR + "python_outputs/"
+    out_directory = TMP_DIR + "python_epirus_3_example_outputs/"
 
 
     output_backup_folder = TMP_DIR + "backup/"
@@ -158,7 +158,10 @@ f1 = {
 "input_json" :"/home/christos/Desktop/SCiO_Projects/REGALE/regale-ryax-modules/form_mapper_version_2/data/form_epirus_3_input_json.json",
       }
 
- 
+# f1 = {
+# "input_json" :"/home/christos/Desktop/SCiO_Projects/REGALE/regale-ryax-modules/form_mapper_version_2/data/form_input_json.json",
+#       }
+
 
 t = handle(f1)  
 
