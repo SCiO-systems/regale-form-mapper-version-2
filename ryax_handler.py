@@ -37,9 +37,10 @@ warnings.filterwarnings("ignore")
 
 #%%
 def handle(module_input):
+    
     # input_json = sys.argv[1]
     # input_json = "/home/christos/Desktop/SCiO_Projects/REGALE/regale/code/form_epirus_3_input_json.json"
-
+    # module_input = f1
     with open(module_input["input_json"], "r") as file:
       data = json.load(file)
 
@@ -79,10 +80,10 @@ def handle(module_input):
 
     resume = ""
 
-    #%% Load previous results from flow_mapper
+ #   # %% Load previous results from flow_mapper
 
     # loading data from flow execution
-    # Get backup fill dem
+    # Get backup fill demW
     db = get_previous(out_directory,step="fill",where="flow")
     db = dplyr.select(db, f.seqno, f.row, f.col, f.elev, f.drec, f.upslope, f.fill_shed, f.local_shed)
     db = add_buffer(db)
@@ -100,17 +101,18 @@ def handle(module_input):
 
 
     os.system("mkdir " + out_directory + "form/")
-    #%% # Form 
+#    #%% # Form 
     if (resume=="" or resume=="form"):
         db_form = calc_form(db, grid,verbose=verbose)
         
         save_output2(data=db_form, name="form", locs=out_directory, out_format=out_format, where = "form")
 
-
-    #%% # Wetness indices 
+    # #%% # Wetness indices 
     if (resume=="" or resume=="weti"):
-        db_weti = calc_weti(db, grid, verbose = verbose)
-
+        db_weti= calc_weti(db, grid, verbose = verbose)
+    
+            
+    
         db_form = dplyr.full_join(db_form, db_weti, by=["seqno", "col", "row", "buffer"])
         
         db_form["lnqarea1"] = np.where(db_form["aspect"] > -1, np.log(db_form["qarea1"].astype(float)), 0)
@@ -119,40 +121,41 @@ def handle(module_input):
         db_form["new_asp"] = np.where(db_form["new_asp"] > 360,db_form["new_asp"] -360, db_form["new_asp"])
         db_form["lnqarea1"] = round(db_form["lnqarea1"], 3)
         db_form["lnqarea2"] = round(db_form["lnqarea2"], 3)
-
+    
         #CHECK SAVED FILE THAT IS SIMILAR TO THE R-PRODUCED FILE
         save_output2(data=db_form, name="weti", locs=out_directory, out_format=out_format, where = "form")
         
         del db_form
         del db_weti
-        
 
-    #%% # Relief
+        
+    # #%% # Relief    
     if (resume=="" or resume=="relief"):
         db_relz = calc_relz(db, idb, str_val = str_val, ridge_val = ridge_val, pond = pond, verbose = verbose)
 
-        save_output2(data=db_relz, name="relief", locs=out_directory, out_format=out_format, where = "form")
 
-    #%% # Length 
+    save_output2(data=db_relz, name="relief", locs=out_directory, out_format=out_format, where = "form")
+
+#    #%% # Length 
     if (resume=="" or resume=="length"):
         db_length = calc_length(db, db_relz, verbose = verbose)
 
         save_output2(data=db_length, name="length", locs=out_directory, out_format=out_format, where = "form")
 
 
-    #%%
+  #  #%%
         del db_length
         del db_relz
 
-    #%%
+ #   #%%
 
     # print(db_relz.json())
     # t = pd.DataFrame(db_relz.json())
-    response = requests.get("https://r-lambdas-dummy.s3.eu-central-1.amazonaws.com/output.json")
-    print(response)
+    # response = requests.get("https://r-lambdas-dummy.s3.eu-central-1.amazonaws.com/output.json")
+    # print(response)
 
-    return {'python_outputs' : out_directory}
-
+    # return {'python_outputs' : out_directory}
+#%%
 
 f1 = {
 "input_json" :"/home/christos/Desktop/SCiO_Projects/REGALE/regale-ryax-modules/form_mapper_version_2/data/form_epirus_3_input_json.json",

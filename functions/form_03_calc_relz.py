@@ -28,7 +28,8 @@ def calc_relief(relz):
     r["min_elev"] = np.nanmin(r["elev"])
     r["max_elev"] = np.nanmax(r["elev"])
     r["elev_range"] = r["max_elev"] - r["min_elev"]
-    r["max_elev_shed"] = r["elev"].groupby(r['fill_shed'],group_keys=False).transform(max_na)
+    # r["max_elev_shed"] = r["elev"].groupby(r['fill_shed'],group_keys=False).transform(max_na)
+    r["max_elev_shed"] = r["elev"].groupby(r['fill_shed'],group_keys=False).transform(np.nanmax)
     
     r["zpit2peak"] = r["z2pit"] + r["z2peak"]
     r["zcr2st"] = r["z2cr"] + r["z2st"]
@@ -51,6 +52,9 @@ def calc_relief(relz):
     return r
 
 def calc_relz(db, idb, str_val = 10000, ridge_val = 10000, pond = None, verbose = False):
+    #-------------SET TMP FODLER PATH---------------#
+    tmp_folder = "/home/christos/Desktop/SCiO_Projects/REGALE/regale-ryax-modules/form_mapper_version_2/"
+    #-------------SET TMP FODLER PATH---------------#
     if verbose:
         print("  Calculating streams")
 
@@ -62,18 +66,23 @@ def calc_relz(db, idb, str_val = 10000, ridge_val = 10000, pond = None, verbose 
           "str_val" : str_val
           }
     
-    with open("/tmp/python.json", 'w') as f:
+    with open(tmp_folder + "python.json", 'w') as f:
         json.dump(json_file, f)
         
     # AWS TEST
-    path_to_file_for_upload = "/tmp/python.json"
+    path_to_file_for_upload = tmp_folder + "python.json"
+    # target_bucket = "r-lambdas-dummy"
     target_bucket = "r-lambdas-dummy"
     
     string = path_to_file_for_upload.split("/")
     object_name = string[-1]
     
     # Upload the file
-    s3_client = boto3.client('s3')
+    s3_client = boto3.client('s3',
+                            aws_access_key_id="AKIAWD26EDVAG3KHE4W3", 
+                            aws_secret_access_key="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", 
+                            region_name="eu-central-1"
+                            )
     try:
         response = s3_client.upload_file(path_to_file_for_upload, target_bucket, object_name)
     except ClientError as e:
@@ -81,10 +90,11 @@ def calc_relz(db, idb, str_val = 10000, ridge_val = 10000, pond = None, verbose 
     
     
     # json_file = "https://r-lambdas-dummy.s3.eu-central-1.amazonaws.com/python.json"
-    json_file = {"body": "https://r-lambdas-dummy.s3.eu-central-1.amazonaws.com/python.json"}
+    json_file = {"body": "https:/r-lambdas-dummy.s3.eu-central-1.amazonaws.com/python.json"}
     #JSON FILE IS NOT USED AT ALL.. EVERYTHING IS HARDCODED
     response = requests.post("https://lambda.regale.form-03-calc-relz.calc-stream3.scio.services/", json = json.dumps(json_file))
     print(1, response)
+    
     time.sleep(30)
     
     response = requests.get("https://r-lambdas-dummy.s3.eu-central-1.amazonaws.com/output.json")
@@ -104,18 +114,22 @@ def calc_relz(db, idb, str_val = 10000, ridge_val = 10000, pond = None, verbose 
          "pond" : pond.to_dict(orient="index")
          }
     
-    with open("/tmp/python_A.json", 'w') as f:
+    with open(tmp_folder + "python_A.json", 'w') as f:
         json.dump(json_file, f)
     
     # AWS TEST
-    path_to_file_for_upload = "/tmp/python_A.json"
-    target_bucket = "r-lambdas-dummy"
+    path_to_file_for_upload = tmp_folder + "python_A.json"
+    # target_bucket = "r-lambdas-dummy"
     
     string = path_to_file_for_upload.split("/")
     object_name = string[-1]
     
-    # Upload the file
-    s3_client = boto3.client('s3')
+    # # Upload the file
+    # s3_client = boto3.client('s3',
+    #                         aws_access_key_id="AKIAWD26EDVAJLM4VNMQ", 
+    #                         aws_secret_access_key="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", 
+    #                         region_name="eu-central-1"
+    #                         )
     try:
         response = s3_client.upload_file(path_to_file_for_upload, target_bucket, object_name)
     except ClientError as e:
@@ -130,7 +144,7 @@ def calc_relz(db, idb, str_val = 10000, ridge_val = 10000, pond = None, verbose 
     response = requests.get("https://r-lambdas-dummy.s3.eu-central-1.amazonaws.com/output_A.json")
     
     str2pits = pd.DataFrame(response.json())   
-    
+    # return str2pits
     #---------------------------------------------------------------------------------------------------------------
     
     
@@ -142,19 +156,23 @@ def calc_relz(db, idb, str_val = 10000, ridge_val = 10000, pond = None, verbose 
          "str_val" : ridge_val
          }
     
-    with open("/tmp/python.json", 'w') as f:
+    with open(tmp_folder + "python.json", 'w') as f:
         json.dump(json_file, f)
         
         
     # AWS TEST
-    path_to_file_for_upload = "/tmp/python.json"
-    target_bucket = "r-lambdas-dummy"
+    path_to_file_for_upload = tmp_folder + "python.json"
+    # target_bucket = "r-lambdas-dummy"
      
     string = path_to_file_for_upload.split("/")
     object_name = string[-1]
      
-    # Upload the file
-    s3_client = boto3.client('s3')
+    # # Upload the file
+    # s3_client = boto3.client('s3',
+    #                         aws_access_key_id="AKIAWD26EDVAJLM4VNMQ", 
+    #                         aws_secret_access_key="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", 
+    #                         region_name="eu-central-1"
+    #                         )
     try:
         response = s3_client.upload_file(path_to_file_for_upload, target_bucket, object_name)
     except ClientError as e:
@@ -193,19 +211,23 @@ def calc_relz(db, idb, str_val = 10000, ridge_val = 10000, pond = None, verbose 
          "pond" : pd.DataFrame().to_dict(orient="index")
          }
     
-    with open("/tmp/python_A.json", 'w') as f:
+    with open(tmp_folder + "python_A.json", 'w') as f:
         json.dump(json_file, f)
         
         
     # AWS TEST
-    path_to_file_for_upload = "/tmp/python_A.json"
-    target_bucket = "r-lambdas-dummy"
+    path_to_file_for_upload = tmp_folder + "python_A.json"
+    # target_bucket = "r-lambdas-dummy"
      
     string = path_to_file_for_upload.split("/")
     object_name = string[-1]
      
-    # Upload the file
-    s3_client = boto3.client('s3')
+    # # Upload the file
+    # s3_client = boto3.client('s3',
+    #                         aws_access_key_id="AKIAWD26EDVAJLM4VNMQ", 
+    #                         aws_secret_access_key="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", 
+    #                         region_name="eu-central-1"
+    #                         )
     try:
         response = s3_client.upload_file(path_to_file_for_upload, target_bucket, object_name)
     except ClientError as e:
@@ -244,7 +266,9 @@ def calc_relz(db, idb, str_val = 10000, ridge_val = 10000, pond = None, verbose 
     #---------------------------------------------------------------------------------------------------------------
     if verbose:
         print("  Calculating ridges to pits") 
-    
+        
+    # return all_
+
     all_ = calc_relief(all_)        
     
     return all_
